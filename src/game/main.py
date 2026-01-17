@@ -8,8 +8,8 @@ import sys
 from ..entities.shot import Shot 
 
 
-
-
+startMenu = True
+dt = 0
 def main():
     print("Starting Asteroids with pygame version: VERSION")
     print(f"Screen width: {SCREEN_WIDTH}")
@@ -28,7 +28,6 @@ def main():
     AsteroidField.containers = (updatable)
     asteroid_field = AsteroidField()
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
-    startMenu = True
     gameloop(screen, clock, dt, updatable, drawable, asteroids, shots, player, startMenu)
 
 
@@ -45,7 +44,7 @@ def gameloop(screen, clock, dt, updatable, drawable, asteroids, shots, player, s
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if buttonSelect == 1:
-                        return
+                        sys.exit()
                     startMenu = False
                 if event.key == pygame.K_w or event.key == pygame.K_s:
                     buttonSelect = 1 - buttonSelect
@@ -68,7 +67,7 @@ def gameloop(screen, clock, dt, updatable, drawable, asteroids, shots, player, s
         updatable.update(dt)
         drawGame(screen, drawable)
         draw_text(f"Score: {player.score}", pygame.font.Font(None, 36), (255,255,255), 10, 10, screen)
-        checkDeath(asteroids, player)
+        checkDeath(asteroids, player, screen)
         checkShotCollision(asteroids, shots, player)
         pygame.display.flip()
         dt = clock.tick(60)/1000.0
@@ -83,13 +82,27 @@ def drawGame(screen, drawable):
     for sprite in drawable:
         sprite.draw(screen)
 
-def checkDeath(asteroids,player):
+def checkDeath(asteroids,player, screen):
     for asteroid in asteroids:
         if asteroid.collides_with(player):
             log_event("Player hit")
             print("Game over!")
             print("Score :", player.score)
-            sys.exit()
+            endScreen(screen, player)
+
+def endScreen(screen, player):
+    screen.fill("black")
+    draw_text("Game Over", pygame.font.Font(None, 60), (255,255,255), SCREEN_WIDTH* 1/2 - 100, SCREEN_HEIGHT* (1/8), screen)
+    draw_text(f"Score: {player.score}", pygame.font.Font(None, 60), (255,255,255), SCREEN_WIDTH* 1/2 - 75, SCREEN_HEIGHT* 1/4, screen)
+    draw_text("Press Space to Continue", pygame.font.Font(None, 45), (255,255,255), SCREEN_WIDTH* 1/2 -150 , SCREEN_HEIGHT* (1/2), screen)
+    pygame.display.flip()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    #startMenu = True
+                    main()
+
 
 def checkShotCollision(asteroids, shots, player):
     for shot in shots:

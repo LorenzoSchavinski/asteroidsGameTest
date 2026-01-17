@@ -1,11 +1,11 @@
 import pygame
-from constants import *
-from player import Player
-from logger import *
-from asteroid import Asteroid
-from asteroidfield import AsteroidField
+from ..config.constants import *
+from ..entities.player import Player
+from ..utils.logger import *
+from ..entities.asteroid import Asteroid
+from ..entities.asteroidfield import AsteroidField
 import sys
-from shot import Shot 
+from ..entities.shot import Shot 
 
 
 

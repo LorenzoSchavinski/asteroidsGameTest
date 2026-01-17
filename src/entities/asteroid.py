@@ -1,7 +1,7 @@
 import pygame
-from circleshape import CircleShape
-from constants import *
-from logger import log_event
+from .circleshape import CircleShape
+from ..config.constants import *
+from ..utils.logger import log_event
 import random
 
 class Asteroid(CircleShape):
@@ -28,8 +28,3 @@ class Asteroid(CircleShape):
             asteroid1.velocity = firstSplitDireciton * 1.2
             asteroid2 = Asteroid(self.position.x, self.position.y, newRadius)
             asteroid2.velocity = secondSplitDireciton * 1.2
-            
-
-
-
-

@@ -31,8 +31,10 @@ def main():
     gameloop(screen, clock, dt, updatable, drawable, asteroids, shots, player)
 
 
+def draw_text(text,font,text_col, x,y, screen):
+    img = font.render(text, True, text_col)
+    screen.blit(img, (x,y))
 
-    
 def gameloop(screen, clock, dt, updatable, drawable, asteroids, shots, player): 
     while True:
         log_state()
@@ -42,8 +44,9 @@ def gameloop(screen, clock, dt, updatable, drawable, asteroids, shots, player):
         screen.fill("black")
         updatable.update(dt)
         drawGame(screen, drawable)
+        draw_text(f"Score: {player.score}", pygame.font.Font(None, 36), (255,255,255), 10, 10, screen)
         checkDeath(asteroids, player)
-        checkShotCollision(asteroids, shots)
+        checkShotCollision(asteroids, shots, player)
         pygame.display.flip()
         dt = clock.tick(60)/1000.0
         #print(dt)
@@ -58,15 +61,17 @@ def checkDeath(asteroids,player):
         if asteroid.collides_with(player):
             log_event("Player hit")
             print("Game over!")
+            print("Score :", player.score)
             sys.exit()
 
-def checkShotCollision(asteroids, shots):
+def checkShotCollision(asteroids, shots, player):
     for shot in shots:
         for asteroid in asteroids:
             if asteroid.collides_with(shot):
                 log_event("asteroid_shot")
                 shot.kill()
-                asteroid.split()
+                player.score += asteroid.split()
+                
 
 
 
